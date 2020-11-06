@@ -5,7 +5,8 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var app = express();
 
-var memberRoute = require("./routes/memberRoute");
+//var memberRoute = require("./routes/memberRoute");
+var carRoute = require('./routes/carRoute');
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -16,8 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", (req, res) => res.json({ message: "arty api" }));
-app.use("/api", memberRoute);
+app.use("/", carRoute);
 
 app.use(function (req, res, next) {
   next(createError(404));
