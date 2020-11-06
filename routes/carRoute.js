@@ -1,31 +1,56 @@
 const express = require("express");
 const router = express.Router();
 
-const CarModel = require("../models/carModle");
+const CarModel = require("../models/carModel");
 
-router.get('/', async (req, res) => {
+var controller = require('../controllers/carController');
+
+router.get('/', controller.getAll);
+
+router.post('/add', controller.add);
+
+router.get('/:id',async(req,res)=>{
     try {
-        res.json({ message: 'carRoute' });
+        const id = req.params.id;
+        const car = await CarModel.findOne({ id });
+        res.json({id: car})
     } catch (error) {
-        res.status(404).json({ error: error });
+        res.status(404).json({
+            status: "fail",
+            message: error
+        });
     }
-});
+})
 
-router.post('/add', async (req, res) => {
+router.put('/:id',async(req,res)=>{
     try {
-        var id = req.body.id;
-        var name = req.body.name;
-        var color = req.body.color;
-        var model = req.body.model;
-        var weight = req.body.weight;
+        const id = req.params.id;
+        var name = req.body.name
+        var model = req.body.model
+        var weight = req.body.weight
+        var color = req.body.color
+        const cars = await CarModel.findOneAndUpdate({id}, {name,model,weight, color});
+        res.json({ name: cars })
+    } catch (error) {
+        res.status(400).json({
+            status:"ว๊ายผิด",
+            message: error
+        })
+    }
+})
+
+router.delete('/:id',async(req,res)=>{
+    try {
+        const id = req.params.id
+        const cars = await CarModel.findOneAndDelete({ id });
+        res.json({data:cars})
         
-        var newCarModel = new CarModel({ id, name, color, model, weight });
-        var response = await CarModel.create(newCarModel);
-
-        res.json({ data: response });
     } catch (error) {
-        res.status(404).json({ error: error });
+        res.status(400).json({
+            status:"ว๊ายผิด",
+            message: error
+        })
     }
-});
+})
 
 module.exports = router;

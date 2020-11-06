@@ -5,9 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var app = express();
 
-//var memberRoute = require("./routes/memberRoute");
-var carRoute = require('./routes/carRoute');
-
+var CarRoute =require("./routes/carRoute")
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -17,11 +15,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", carRoute);
+app.use("/",CarRoute)
 
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
+
 
 app.use(function (err, req, res, next) {
   res.locals.message = err.message;
